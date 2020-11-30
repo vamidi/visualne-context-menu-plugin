@@ -6,8 +6,9 @@ import { ContextMenuService } from '../context-menu.service';
 export abstract class MenuComponent implements AfterViewInit
 {
     public visible: boolean = true;
-    public x: number = 0;
-    public y: number = 0;
+
+    abstract x: number = 0;
+    abstract y: number = 0;
 
     abstract el: ElementRef<HTMLDivElement>;
     abstract tplRef: TemplateRef<any>

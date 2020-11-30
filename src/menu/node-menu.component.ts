@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { MenuComponent } from './menu.component';
 import { ContextMenuService } from '../context-menu.service';
 
@@ -8,6 +8,11 @@ import { ContextMenuService } from '../context-menu.service';
 })
 export class NodeMenuComponent extends MenuComponent implements AfterViewInit
 {
+    @Input()
+    public x: number = 0;
+    @Input()
+    public y: number = 0;
+
     @ViewChild('menu', { static: true })
     public el!: ElementRef<HTMLDivElement>;
 

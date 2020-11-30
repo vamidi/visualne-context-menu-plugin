@@ -18,6 +18,11 @@ import { ContextMenuService } from '../context-menu.service';
 })
 export class MainMenuComponent extends MenuComponent implements AfterViewInit
 {
+    @Input()
+    public x: number = 0;
+    @Input()
+    public y: number = 0;
+
     // public args: Object = {};
     // public filter: string = '';
     // public items: any[] = [];
