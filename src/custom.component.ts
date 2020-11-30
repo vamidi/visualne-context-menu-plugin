@@ -16,6 +16,7 @@ import {
 })
 export class CustomComponent implements OnInit, OnDestroy {
     @Input() component!: Type<Component>;
+    @Input() props!: { [key: string]: unknown };
 
     constructor(
         private vcr: ViewContainerRef,
@@ -26,9 +27,18 @@ export class CustomComponent implements OnInit, OnDestroy {
     ngOnInit() {
         const factory = this.factoryResolver.resolveComponentFactory(this.component);
         const componentRef = factory.create(this.injector);
+        const { props } = this;
+
+        for(let key in props) {
+            if(props.hasOwnProperty(key)) {
+                Object.defineProperty(componentRef.instance, key, {
+                    get() { return props[key]; },
+                    set(val) { props[key] = val; }
+                })
+            }
+        }
 
         this.vcr.insert(componentRef.hostView);
-
     }
 
     ngOnDestroy() {
