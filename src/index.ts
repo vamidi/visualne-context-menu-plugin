@@ -67,7 +67,7 @@ class ContextMenu extends Plugin
 
             // const [x, y] = [e.clientX, e.clientY];
 
-            const element = document.createElement('visualne-element');
+            const element = document.createElement('visualne-context-element');
             const props = element as any;
             /*if(node) {
                 props.component = NodeMenuComponent;
