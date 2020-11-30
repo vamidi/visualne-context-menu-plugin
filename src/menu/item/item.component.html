@@ -1,0 +1,19 @@
+<div class="item" (click)="onClick($event)" (mouseover)="showSubItems()"> <!-- (mouseleave)="timeoutHide()" -->
+	{{ item.title }}
+	<ul *ngIf="hasSubItems && visibleSubItems">
+		<li *ngFor="let subItem of item.subItems">{{ subItem.title }}</li>
+	</ul>
+	<!-- .item(
+	@click="onClick($event)"
+	@mouseover="showSubitems()"
+	@mouseleave="timeoutHide()"
+	:class="{ hasSubitems }"
+	) {{item.title}}
+	.subitems(v-show="hasSubitems && this.visibleSubitems")
+	Item(v-for="subitem in item.subitems"
+	:key="subitem.title"
+	:item="subitem"
+	:args="args"
+	:delay="delay"
+	) -->
+</div>

@@ -1,0 +1,18 @@
+@import '../../vars'
+@import '../../common'
+
+.item
+  @extend .item
+  &.hasSubItems:after
+    content: '►'
+    position: absolute
+    opacity: 0.6
+    right: 5px
+    top: 5px
+  .subItems
+    position: absolute
+    top: 0
+    left: 100%
+    width: $width
+    .subItem
+      @extend .item
