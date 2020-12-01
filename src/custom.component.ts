@@ -2,32 +2,26 @@ import {
     Component,
     Input,
     OnInit,
-    Injector,
-    ComponentFactoryResolver,
-    ViewContainerRef,
-    Type,
     ChangeDetectionStrategy,
-    OnDestroy
 } from '@angular/core';
+import { ContextMenuService } from './context-menu.service';
+import { ComponentType } from '@angular/cdk/overlay';
 
 @Component({
     template: '',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomComponent implements OnInit, OnDestroy {
-    @Input() component!: Type<Component>;
+export class CustomComponent implements OnInit {
+    @Input() component!: ComponentType<Component>;
     @Input() props!: { [key: string]: unknown };
 
     constructor(
-        private vcr: ViewContainerRef,
-        private injector: Injector,
-        private factoryResolver: ComponentFactoryResolver
+        private contextMenuService: ContextMenuService,
     ) {}
 
     ngOnInit() {
-        const factory = this.factoryResolver.resolveComponentFactory(this.component);
-        const componentRef = factory.create(this.injector);
         const { props } = this;
+        const componentRef = this.contextMenuService.open({ x: <number>props.x, y: <number>props.y }, this.component);
 
         for(const key in props) {
             if(props.hasOwnProperty(key)) {
@@ -37,11 +31,5 @@ export class CustomComponent implements OnInit, OnDestroy {
                 })
             }
         }
-
-        this.vcr.insert(componentRef.hostView);
-    }
-
-    ngOnDestroy() {
-        this.vcr.detach(0);
     }
 }

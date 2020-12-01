@@ -1,17 +1,22 @@
-// import { NodeEditor } from 'visualne';
-
-import { AfterViewInit, ElementRef, TemplateRef, ViewContainerRef } from '@angular/core';
+import { NodeEditor } from 'visualne';
+import { ElementRef, OnInit, ViewContainerRef } from '@angular/core';
 import { ContextMenuService } from '../context-menu.service';
+import debounce from 'lodash.debounce';
 
-export abstract class MenuComponent implements AfterViewInit
+export abstract class MenuComponent implements OnInit
 {
     public visible: boolean = true;
 
+    abstract editor: NodeEditor;
+    abstract delay: number;
     abstract x: number = 0;
     abstract y: number = 0;
+    abstract searchBar: boolean;
+    abstract searchKeep: () => false;
 
     abstract el: ElementRef<HTMLDivElement>;
-    abstract tplRef: TemplateRef<any>
+
+    protected timeoutHide!: { cancel: Function; flush: Function; };
 
     protected constructor(
         protected contextMenuService: ContextMenuService,
@@ -27,18 +32,30 @@ export abstract class MenuComponent implements AfterViewInit
         // }).$mount(el);
     }
 
-    public ngAfterViewInit()
+    public ngOnInit()
     {
-        this.contextMenuService.open({ x: this.x, y: this.y }, this.tplRef, this.viewContainerRef,{ data:'I\'m the button '+ 1 })
-            .subscribe(res => {
-                console.log(res)
-            },
-        );
+        console.log('attaching timeout');
+        this.timeoutHide = debounce(this.hide, this.delay);
     }
 
     abstract addItem(...args);
 
     abstract show(...args)
 
-    abstract hide();
+    public hide(event: any)
+    {
+        this.contextMenuService.close();
+    }
+
+    public contextMenu(e: any)
+    {
+        e.preventDefault();
+    }
+
+    public cancelHide() {
+        const hide = this.timeoutHide;
+
+        if (hide && hide.cancel)
+            this.timeoutHide.cancel();
+    }
 }

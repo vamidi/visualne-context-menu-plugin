@@ -1,41 +1,31 @@
-import { Injectable, TemplateRef, ViewContainerRef } from '@angular/core';
+import { ComponentRef, Injectable } from '@angular/core';
 import {
     Overlay,
-    OverlayContainer,
     ConnectionPositionPair,
     PositionStrategy,
     OverlayConfig,
 } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
-import { /*fromEvent,*/ Subscription, Subject } from 'rxjs';
-import { /* filter, */ take } from 'rxjs/operators';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { FlexibleConnectedPositionStrategyOrigin } from '@angular/cdk/overlay/position/flexible-connected-position-strategy';
+import { ComponentType } from '@angular/cdk/portal/portal';
+import { OverlayRef } from '@angular/cdk/overlay/overlay-ref';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ContextMenuService {
-    overlayRef: any;
-    sub!: Subscription;
-    private afterClosed = new Subject<any>();
-    onClosed = this.afterClosed.asObservable();
+export class ContextMenuService
+{
+    private overlayRef: OverlayRef | null = null;
 
-    constructor(
-        private overlay: Overlay, private overlayContainer:OverlayContainer) { }
+    constructor(private overlay: Overlay) { }
 
-    open(origin: FlexibleConnectedPositionStrategyOrigin,
-         menu: TemplateRef<any>, viewContainerRef: ViewContainerRef, data: any)
+    public open<T>(origin: FlexibleConnectedPositionStrategyOrigin, menuComponent: ComponentType<T>): ComponentRef<T>
     {
         // this.close(null);
         this.overlayRef = this.overlay.create(
             this.getOverlayConfig(origin),
         );
-        this.overlayRef.attach(new TemplatePortal(menu, viewContainerRef, {
-            $implicit: data, close:this.close,
-        }));
-        setTimeout(()=>{
-            console.log(this.overlayContainer.getContainerElement().getBoundingClientRect())
-        });
+        return this.overlayRef.attach(new ComponentPortal(menuComponent));
 
         /*
         this.sub = fromEvent<MouseEvent>(document, 'click')
@@ -54,23 +44,21 @@ export class ContextMenuService {
                 this.close(null);
             });
          */
-        return this.onClosed.pipe(take(1));
     }
 
-    close = (data: any) => {
-        console.log('closing');
-        this.sub && this.sub.unsubscribe();
+    public close()
+    {
         if (this.overlayRef) {
             this.overlayRef.dispose();
             this.overlayRef = null;
-            this.afterClosed.next(data)
         }
     }
+
     private getOverlayPosition(origin: FlexibleConnectedPositionStrategyOrigin): PositionStrategy {
         return this.overlay
             .position()
             .flexibleConnectedTo(origin)
-            .withPositions(this.getPositions())
+            .withPositions(ContextMenuService.getPositions())
             .withPush(false);
     }
     private getOverlayConfig(origin: FlexibleConnectedPositionStrategyOrigin): OverlayConfig {
@@ -81,7 +69,7 @@ export class ContextMenuService {
             scrollStrategy: this.overlay.scrollStrategies.close(),
         });
     }
-    private getPositions(): ConnectionPositionPair[] {
+    private static getPositions(): ConnectionPositionPair[] {
         return [
             {
                 originX: 'center',

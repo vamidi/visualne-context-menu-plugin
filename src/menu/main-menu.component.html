@@ -1,14 +1,6 @@
-<div class="context-menu" #menu *ngIf="visible">
-     <!-- (mouseleave)="timeoutHide()" (mouseover)="cancelHide()" (contextmenu)="prevent.default()" (wheel)=""> -->
+<div class="context-menu" #menu (contextmenu)="contextMenu($event)" (mouseover)="cancelHide()" (mouseleave)="hide($event)">
+     <h1>Hello World!</h1>
+     <!--  (contextmenu)="prevent.default()" (wheel)=""> -->
 <!--  <ng-search></ng-search>-->
 <!--  <ng-item *ngFor="item in filtered"></ng-item>-->
 </div>
-<ng-template #tpl let-close="close" let-data>
-     <div class="context-menu" >
-          <h5>Angular {{ data.data }}</h5>
-          And here's some amazing content. It's very engaging. Right?
-          <div>
-               <a (click)="close('uno')">Close</a>
-          </div>
-     </div>
-</ng-template>

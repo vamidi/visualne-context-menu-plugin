@@ -1,23 +1,39 @@
-import { AfterViewInit, Component, ElementRef, Input, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { MenuComponent } from './menu.component';
 import { ContextMenuService } from '../context-menu.service';
+import { NodeEditor } from 'visualne';
 
 @Component({
     selector: 'ng-node-menu',
     templateUrl: './main-menu.component.html',
 })
-export class NodeMenuComponent extends MenuComponent implements AfterViewInit
+export class NodeMenuComponent extends MenuComponent
 {
+    @Input()
+    public editor!: NodeEditor;
+
     @Input()
     public x: number = 0;
     @Input()
     public y: number = 0;
 
+    @Input()
+    public delay!: number;
+
+    @Input()
+    public searchBar!: boolean;
+
+    @Input()
+    public searchKeep!: () => false;
+
+    // items: {},
+    // nodeItems: {},
+    // allocate: () => [],
+    // rename: (component) => string,
+    // angularComponent: null
+
     @ViewChild('menu', { static: true })
     public el!: ElementRef<HTMLDivElement>;
-
-    @ViewChild('tpl', { static: true })
-    public tplRef!: TemplateRef<any>
 
     constructor(
         public contextMenuService: ContextMenuService,
@@ -28,11 +44,6 @@ export class NodeMenuComponent extends MenuComponent implements AfterViewInit
         // super(editor, props, angularComponent);
 
         // this.initialize(editor, nodeItems)
-    }
-
-    public ngAfterViewInit()
-    {
-        super.ngAfterViewInit();
     }
 
     /*
@@ -56,8 +67,6 @@ export class NodeMenuComponent extends MenuComponent implements AfterViewInit
  */
 
     addItem(...args) { }
-
-    hide() { }
 
     show(...args) { }
 }

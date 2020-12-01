@@ -1,0 +1,22 @@
+@import '../vars';
+@import '../common';
+
+//.context-menu
+//  position: fixed
+//  padding: 10px
+//  width: $width
+//  margin-top: -20px
+//  margin-left: -$width/2
+//  background-color: #fff
+//  .search
+//    @extend .item
+
+:host {
+  display: block;
+  background: white;
+}
+
+h1 {
+  margin: 0;
+  padding: 1em;
+}

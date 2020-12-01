@@ -1,9 +1,7 @@
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
     Component, ElementRef,
     Input,
-    TemplateRef,
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
@@ -12,26 +10,38 @@ import { NodeEditor } from 'visualne';
 import { ContextMenuService } from '../context-menu.service';
 
 @Component({
+    selector: 'ng-main-menu',
     templateUrl: './main-menu.component.html',
-    styleUrls: ['./main-menu.component.sass'],
+    styleUrls: ['./main-menu.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainMenuComponent extends MenuComponent implements AfterViewInit
+export class MainMenuComponent extends MenuComponent
 {
+    @Input()
+    public editor!: NodeEditor;
+
     @Input()
     public x: number = 0;
     @Input()
     public y: number = 0;
 
-    // public args: Object = {};
-    // public filter: string = '';
-    // public items: any[] = [];
+    @Input()
+    public delay!: number;
+
+    @Input()
+    public searchBar!: boolean;
+
+    @Input()
+    public searchKeep!: () => false;
+
+    // items: {},
+    // nodeItems: {},
+    // allocate: () => [],
+    // rename: (component) => string,
+    // angularComponent: null
 
     @ViewChild('menu', { static: true })
     public el!: ElementRef<HTMLDivElement>;
-
-    @ViewChild('tpl', { static: true })
-    public tplRef!: TemplateRef<any>
 
     constructor(
         public contextMenuService: ContextMenuService,
@@ -62,23 +72,11 @@ export class MainMenuComponent extends MenuComponent implements AfterViewInit
         */
     }
 
-    // protected nodeItems: any[] = [];
-    @Input() editor!: NodeEditor;
-
-    public ngAfterViewInit()
-    {
-        super.ngAfterViewInit();
-    }
-
     addItem(...args) {
         // this.menu.$emit('additem', ...args);
     }
 
     show(...args) {
         // this.menu.$emit('show', ...args);
-    }
-
-    hide(...args) {
-        // this.menu.$emit('hide');
     }
 }

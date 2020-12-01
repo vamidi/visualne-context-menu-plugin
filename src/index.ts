@@ -12,21 +12,21 @@ export interface ContextMenuEvents extends EventsTypes
 }
 
 export declare type ContextMenuPluginParams = PluginParams & {
-    searchBar: boolean,
-    searchKeep: () => false,
-    delay: number,
-    items: {},
-    nodeItems: {},
-    allocate: () => [],
-    rename: (component) => string,
-    angularComponent: null
+    searchBar?: boolean,
+    searchKeep?: () => false,
+    delay?: number,
+    items?: {},
+    nodeItems?: {},
+    allocate?: (component) => [],
+    rename?: (component) => string,
+    angularComponent?: null
 };
 
 class ContextMenu extends Plugin
 {
     name: string = 'context-menu';
 
-    constructor(editor: NodeEditor, params: ContextMenuPluginParams = {
+    constructor(editor: Context<ContextMenuEvents & EventsTypes>, params: ContextMenuPluginParams = {
         searchBar: true,
         searchKeep: () => false,
         delay: 1000,
@@ -38,12 +38,11 @@ class ContextMenu extends Plugin
     }) {
         super(editor);
 
-        this.initialize(params);
+        this.initialize(editor, params);
     }
 
-    private initialize({ searchBar, searchKeep, delay, items, nodeItems, allocate, rename, angularComponent }: ContextMenuPluginParams)
+    private initialize(editor: Context<ContextMenuEvents & EventsTypes>, { searchBar, searchKeep, delay, items, nodeItems, allocate, rename, angularComponent }: ContextMenuPluginParams)
     {
-        const editor: Context<ContextMenuEvents & EventsTypes> = this.context;
         // lets add bindings for the editor
         editor.bind('hidecontextmenu');
         editor.bind('showcontextmenu');
