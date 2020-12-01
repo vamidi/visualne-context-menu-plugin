@@ -17,7 +17,7 @@ export declare type ContextMenuPluginParams = PluginParams & {
     delay?: number,
     items?: {},
     nodeItems?: {},
-    allocate?: (component) => [],
+    allocate?: (component) => string[],
     rename?: (component) => string,
     angularComponent?: null
 };
