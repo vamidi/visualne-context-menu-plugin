@@ -1,6 +1,6 @@
 {
   "name": "visualne-angular-context-menu-plugin",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "VisualNE plugin to render a context menu in the Angular framework",
   "main": "dist/visualne-angular-context-menu-plugin.common.js",
   "module": "dist/visualne-angular-context-menu-plugin.esm.js",
