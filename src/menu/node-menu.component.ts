@@ -1,7 +1,9 @@
 import { Component, ElementRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { MenuComponent } from './menu.component';
 import { ContextMenuService } from '../context-menu.service';
-import { NodeEditor } from 'visualne';
+import { Component as VisualNEComponent, NodeEditor } from 'visualne';
+import { ComponentItem, createNode, traverse } from '../utils';
+import { ComponentType } from '@angular/cdk/overlay';
 
 @Component({
     selector: 'ng-node-menu',
@@ -26,11 +28,20 @@ export class NodeMenuComponent extends MenuComponent
     @Input()
     public searchKeep!: () => false;
 
-    // items: {},
-    // nodeItems: {},
-    // allocate: () => [],
-    // rename: (component) => string,
-    // angularComponent: null
+    @Input()
+    public items: { [key: string]: ComponentItem } = {};
+
+    @Input()
+    public nodeItems: {} = {};
+
+    @Input()
+    public allocate!: (component) => string[];
+
+    @Input()
+    public rename!: (component) => string;
+
+    @Input()
+    public angularComponent!: ComponentType<Component>;
 
     @ViewChild('menu', { static: true })
     public el!: ElementRef<HTMLDivElement>;
@@ -43,28 +54,26 @@ export class NodeMenuComponent extends MenuComponent
         super(contextMenuService, viewContainerRef);
         // super(editor, props, angularComponent);
 
-        // this.initialize(editor, nodeItems)
+        this.initialize()
     }
 
-    /*
-    initialize(editor: NodeEditor, nodeItems)
+    protected initialize()
     {
-        if (nodeItems['Delete'] !== false) {
-            this.addItem('Delete', ({ node }) => editor.removeNode(node));
+        if (this.nodeItems['Delete'] !== false) {
+            this.addItem('Delete', ({ node }) => this.editor.removeNode(node));
         }
-        if (nodeItems['Clone'] !== false) {
+        if (this.nodeItems['Clone'] !== false) {
             this.addItem('Clone', async (args) => {
                 const { name, position: [x, y], ...params } = args.node;
-                const component: VisualNEComponent = <VisualNEComponent>editor.components.get(name);
+                const component: VisualNEComponent = <VisualNEComponent>this.editor.components.get(name);
                 const node = await createNode(component, { ...params, x: x + 10, y: y + 10 });
 
-                editor.addNode(node);
+                this.editor.addNode(node);
             });
         }
 
-        traverse(nodeItems, (name, func, path) => this.addItem(name, func, path));
+        traverse(this.nodeItems, (name, func, path) => this.addItem(name, func, path));
     }
- */
 
     addItem(...args) { }
 

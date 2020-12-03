@@ -1,17 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ComponentItem, DebouncedFunc } from '../../utils';
+import debounce from 'lodash.debounce';
 
 @Component({
-    selector: 'ng-menu-item',
+    selector: 'ng-component-menu-item',
     templateUrl: 'item.component.html',
+    styleUrls: ['item.component.sass'],
 })
-export class ItemComponent
+export class ItemComponent implements OnInit
 {
-    public item: { onClick: Function, title: string, subItems: any[] } = { onClick: () => {}, title: '', subItems: [] };
+    @Input()
+    public item!: ComponentItem;
+
+    @Input()
+    public delay: number = 500;
+
+    @Output()
+    public onItemClick: EventEmitter<Object> = new EventEmitter<Object>();
+
     public args: Object = {};
     public visibleSubItems: boolean = false;
 
-    hasSubItems(): boolean {
-        return !!this.item.subItems.length
+    public timeoutHide!: DebouncedFunc<(event: any) => void>;
+
+    public get hasSubItems(): boolean {
+        if(!this.item.subItems) return false;
+        return this.item.subItems.length !== 0
+    }
+
+    public ngOnInit()
+    {
+        this.timeoutHide = debounce(this.hideSubItems, this.delay);
     }
 
     showSubItems(): void {
@@ -19,18 +38,27 @@ export class ItemComponent
         this.cancelHide();
     }
 
-    public hideSubItems(): void {
+    public hideSubItems(): void
+    {
         this.visibleSubItems = false;
     }
 
-    public cancelHide(): void { }
+    public cancelHide(): void {
+        const hide = this.timeoutHide;
 
-    public onClick(event: any): void {
+        if (hide && hide.cancel)
+            this.timeoutHide.cancel();
+    }
+
+    public onClick(event: any): void
+    {
         event.stopPropagation();
 
         if(this.item.onClick)
             this.item.onClick(this.args);
 
-        // this.$root.$emit('hide');
+        this.onItemClick.emit(this.args);
     }
+
+    public onSubItemClick(event: any): void { this.onItemClick.emit(event); }
 }

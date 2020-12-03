@@ -6,5 +6,9 @@
 		"umdModuleIds": {
 			"visualne": "visualne"
 		}
-	}
+	},
+	"whitelistedNonPeerDependencies": [
+		"lodash.debounce",
+		"lodash.isfunction"
+	]
 }

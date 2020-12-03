@@ -6,7 +6,7 @@
 		"moduleResolution": "node",
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"target": "es5",
+		"target": "es2015",
 		"sourceMap": true,
 		"declaration": true,
 		"downlevelIteration": true,
@@ -17,7 +17,7 @@
 		"noUnusedLocals": true,
 		"noImplicitAny": false,
 		"lib": [
-			"es6",
+			"es2017",
 			"dom"
 		],
 		"typeRoots": [

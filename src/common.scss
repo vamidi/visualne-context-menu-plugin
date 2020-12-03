@@ -1,0 +1,217 @@
+@import './vars.sass';
+
+.context {
+  display: block;
+  background: white;
+
+  color: #D0C7FF;
+  list-style: none;
+  margin-top: -20px;
+  padding: 0.05em 0.25em;
+
+  border: 1px solid transparent;
+  border-right-color: lighten( #3F51B5, 6% );
+  border-bottom-color: lighten( #3F51B5, 6% );
+  border-radius: 3px;
+
+  position: absolute;
+  min-width: 16em;
+  z-index: 1;
+
+  background: linear-gradient( 145deg, #673AB7, #3F51B5 );
+  box-shadow: 0 4px 14px -5px #141321;
+
+  will-change: transform, opacity;
+  transition: transform, opacity, visibility;
+  transition-duration: 0.35s, 0.2s, 0s;
+  transition-delay: 0.08s, 0s, 0.4s;
+  transition-timing-function: ease;
+
+  transform: rotate3d(-1,-1,0,25deg) scale(1);
+  transform-origin: 0 0;
+  opacity: 0;
+  visibility: hidden;
+
+  &, & * {
+    user-select: none;
+    cursor: pointer;
+  }
+
+  &.is-visible {
+
+    opacity: 1;
+    transform: none;
+    transition-delay: 0s, 0s, 0s;
+    visibility: visible;
+
+  }
+
+  &--sub {
+    background: #4b4ab6;
+    margin-top: 0;
+    width: auto;
+    min-width: 10em;
+    left: 100%;
+    top: -0.4em;
+    transform: translateX(-0.7em);
+    transition: transform, opacity, width, min-width, visibility;
+    transition-timing-function: ease;
+    transition-duration: 0.3s, 0.25s, 0.15s, 0.15s, 0.01s;
+    transition-delay: 0.3s, 0.25s, 0.3s, 0.3s, 0.35s;
+    overflow: hidden;
+
+    .context__item {
+      padding-left: 2em;
+    }
+
+    i[class*="entypo-"] {
+
+      transform: translateX(-2.25em);
+
+    }
+
+    &.oppositeX {
+
+      right: 100%;
+      left: auto;
+      transform: translateX(0.7em);
+
+    }
+
+    &.oppositeY {
+
+      top: auto;
+      bottom: -0.4em;
+
+    }
+
+  }
+
+  &__header,
+  &__item {
+
+    padding-left: 2.5em;
+    padding-right: 1.5em;
+
+    padding-top: 0.3em;
+    padding-bottom: 0.35em;
+
+  }
+
+  &__header,
+  &__divider {
+
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    border-bottom: 1px solid rgba( #D0C7FF, 0.3 );
+
+  }
+
+  &__header {
+
+    font-weight: 700;
+    padding-bottom: 0.5em;
+
+  }
+
+  &__item {
+
+    border-radius: 3px;
+    position: relative;
+
+    &:not( &--nope ):hover {
+
+      background-color: rgba( white, 0.09 );
+      color: white;
+
+      .context--sub {
+
+        opacity: 1;
+        transform: translateX(0);
+        transition-delay: 0.2s, 0.25s, 0.2s, 0.2s, 0s;
+        border-radius: 0 3px 3px 3px;
+        visibility: visible;
+
+      }
+
+    }
+
+    &:last-child {
+
+      margin-bottom: 0.25em;
+
+    }
+
+    &:first-child {
+
+      margin-top: 0.25em;
+
+    }
+
+    &--nope {
+
+      color: rgba( white, 0.3 );
+
+    }
+
+    &--active {
+
+      animation: flash 0.5s ease 1;
+
+    }
+
+  }
+
+  a {
+
+    cursor: default;
+    color: inherit;
+    text-decoration: none;
+    display: block;
+
+  }
+
+  [class*="entypo-"] {
+
+    font-style: normal;
+    position: absolute;
+    transform: translateX(-2em);
+    width: 2em;
+    text-align: right;
+
+    &.post {
+
+      transform: translateY(-55%);
+      right: 0;
+      top: 50%;
+
+    }
+
+    &:before {
+      font-family: 'entypo', sans-serif;
+      margin-right: 0.5em;
+    }
+
+  }
+}
+
+.item {
+  color: #fff;
+  padding: 4px;
+  border-bottom: 1px solid darken($context-color, 8%);
+  background-color: $context-color;
+  cursor: pointer;
+  width: 100%;
+  position: relative;
+  &:first-child {
+    border-top-left-radius: $context-menu-round;
+    border-top-right-radius: $context-menu-round
+  }
+  &:last-child {
+    border-bottom-left-radius: $context-menu-round;
+    border-bottom-right-radius: $context-menu-round
+  }
+  &:hover {
+    background-color: lighten($context-color, 4%)
+  }
+}

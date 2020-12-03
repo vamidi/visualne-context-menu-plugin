@@ -1,67 +1,52 @@
+import { Component, ElementRef, OnInit, ViewContainerRef } from '@angular/core';
+import { ComponentType } from '@angular/cdk/overlay';
 import { NodeEditor } from 'visualne';
-import { ElementRef, OnInit, ViewContainerRef } from '@angular/core';
 import { ContextMenuService } from '../context-menu.service';
+import { ComponentItem, DebouncedFunc } from '../utils';
 import debounce from 'lodash.debounce';
-
-interface DebouncedFunc<T extends (...args: any[]) => any> {
-    /**
-     * Call the original function, but applying the debounce rules.
-     *
-     * If the debounced function can be run immediately, this calls it and returns its return
-     * value.
-     *
-     * Otherwise, it returns the return value of the last invokation, or undefined if the debounced
-     * function was not invoked yet.
-     */
-    (...args: Parameters<T>): ReturnType<T> | undefined;
-
-    /**
-     * Throw away any pending invokation of the debounced function.
-     */
-    cancel(): void;
-
-    /**
-     * If there is a pending invokation of the debounced function, invoke it immediately and return
-     * its return value.
-     *
-     * Otherwise, return the value from the last invokation, or undefined if the debounced function
-     * was never invoked.
-     */
-    flush(): ReturnType<T> | undefined;
-}
 
 export abstract class MenuComponent implements OnInit
 {
     public visible: boolean = true;
+    public timeoutHide!: DebouncedFunc<(event: any) => void>;
 
     abstract editor: NodeEditor;
     abstract delay: number;
     abstract x: number = 0;
     abstract y: number = 0;
     abstract searchBar: boolean;
-    abstract searchKeep: () => false;
+    abstract searchKeep: (title: string) => false;
+    // Custom items that we receive from the user.
+    abstract items: { [key: string]: ComponentItem } = { };
+    abstract nodeItems: {} = {};
+    abstract allocate: (component) => string[];
+    abstract rename: (component) => string;
+
+    abstract angularComponent: ComponentType<Component>;
 
     abstract el: ElementRef<HTMLDivElement>;
+    protected filter: string = '';
+    // Actual items we need to show in the list
+    protected _items: ComponentItem[] = [];
 
-    protected timeoutHide!: DebouncedFunc<(event: any) => void>;
+    public get filtered(): ComponentItem[] {
+        if(!this.filter) return this._items;
+        const regex = new RegExp(this.filter, 'i');
+
+        return this.extractLeafs(this._items)
+            .filter(({ title }) => {
+                return this.searchKeep(title) || title.match(regex)
+            }
+        );
+    }
 
     protected constructor(
         protected contextMenuService: ContextMenuService,
         protected viewContainerRef: ViewContainerRef
-    ) {
-        // const el = document.createElement('div');
-
-        // editor.view.container.appendChild(el);
-
-
-        // this.menu = new Vue({
-        //     render: h => h(vueComponent || MenuView, { props })
-        // }).$mount(el);
-    }
+    ) { }
 
     public ngOnInit()
     {
-        console.log('attaching timeout');
         this.timeoutHide = debounce(this.hide, this.delay);
     }
 
@@ -76,6 +61,7 @@ export abstract class MenuComponent implements OnInit
 
     public contextMenu(e: any)
     {
+        console.log(e);
         e.preventDefault();
     }
 
@@ -84,5 +70,15 @@ export abstract class MenuComponent implements OnInit
 
         if (hide && hide.cancel)
             this.timeoutHide.cancel();
+    }
+
+    protected extractLeafs(items: ComponentItem[] | undefined) {
+        if(!items) return [];
+        const leafs: ComponentItem[] = [];
+        items.map(item => {
+            if(!item.subItems) leafs.push(item)
+            leafs.push(...this.extractLeafs(item.subItems))
+        })
+        return leafs;
     }
 }

@@ -68,23 +68,35 @@ class ContextMenu extends Plugin
 
             const element = document.createElement('visualne-context-element');
             const props = element as any;
+
             /*if(node) {
-                props.component = NodeMenuComponent;
+                props.component = angularComponent || NodeMenuComponent;
                 props.props = Object.assign({}, {
                     editor,
                     searchBar: false,
                     delay,
+                    items,
+                    nodeItems,
+                    allocate,
+                    rename,
+                    angularComponent,
                     x: e.clientX,
                     y: e.clientY,
                 });
             } else {
              */
-                props.component = MainMenuComponent;
+                props.el = element;
+                props.component = angularComponent || MainMenuComponent;
                 props.props = Object.assign({}, {
                     editor,
                     searchKeep,
                     searchBar,
                     delay,
+                    items,
+                    nodeItems,
+                    allocate,
+                    rename,
+                    angularComponent,
                     x: e.clientX,
                     y: e.clientY,
                 });

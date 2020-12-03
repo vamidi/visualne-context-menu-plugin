@@ -9,48 +9,43 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { FlexibleConnectedPositionStrategyOrigin } from '@angular/cdk/overlay/position/flexible-connected-position-strategy';
 import { ComponentType } from '@angular/cdk/portal/portal';
 import { OverlayRef } from '@angular/cdk/overlay/overlay-ref';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ContextMenuService
 {
+    public afterClosed: Subject<void> = new Subject<void>();
+
     private overlayRef: OverlayRef | null = null;
 
     constructor(private overlay: Overlay) { }
 
     public open<T>(origin: FlexibleConnectedPositionStrategyOrigin, menuComponent: ComponentType<T>): ComponentRef<T>
     {
-        // this.close(null);
+        if(this.overlay)
+            this.close();
+
         this.overlayRef = this.overlay.create(
             this.getOverlayConfig(origin),
         );
-        return this.overlayRef.attach(new ComponentPortal(menuComponent));
 
-        /*
-        this.sub = fromEvent<MouseEvent>(document, 'click')
-            .pipe(
-                filter(event => {
-                    const clickTarget = event.target as HTMLElement;
-                    return (
-                        clickTarget !== origin &&
-                        (!!this.overlayRef &&
-                            !this.overlayRef.overlayElement.contains(clickTarget))
-                    );
-                }),
-                take(1),
-            )
-            .subscribe(() => {
-                this.close(null);
-            });
-         */
+        return this.overlayRef.attach(new ComponentPortal(menuComponent));
     }
 
     public close()
     {
-        if (this.overlayRef) {
+        if (this.overlayRef)
+        {
+            this.overlayRef.detach();
             this.overlayRef.dispose();
+
             this.overlayRef = null;
+
+            // tell that we are closed
+            this.afterClosed.next();
+            this.afterClosed.complete();
         }
     }
 

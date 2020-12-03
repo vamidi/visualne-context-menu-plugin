@@ -1,19 +1,6 @@
-<div class="item" (click)="onClick($event)" (mouseover)="showSubItems()"> <!-- (mouseleave)="timeoutHide()" -->
+<li class="context__item" [class.hasSubItems]="hasSubItems" (click)="onClick($event)" (mouseover)="showSubItems()" (mouseleave)="timeoutHide($event)">
 	{{ item.title }}
-	<ul *ngIf="hasSubItems && visibleSubItems">
-		<li *ngFor="let subItem of item.subItems">{{ subItem.title }}</li>
+	<ul *ngIf="hasSubItems && visibleSubItems" class="context context--sub subitems">
+		<ng-component-menu-item *ngFor="let subItem of item.subItems" [delay]="delay" [item]="subItem" (onItemClick)="onSubItemClick($event)">{{ subItem.title }}</ng-component-menu-item>
 	</ul>
-	<!-- .item(
-	@click="onClick($event)"
-	@mouseover="showSubitems()"
-	@mouseleave="timeoutHide()"
-	:class="{ hasSubitems }"
-	) {{item.title}}
-	.subitems(v-show="hasSubitems && this.visibleSubitems")
-	Item(v-for="subitem in item.subitems"
-	:key="subitem.title"
-	:item="subitem"
-	:args="args"
-	:delay="delay"
-	) -->
-</div>
+</li>
