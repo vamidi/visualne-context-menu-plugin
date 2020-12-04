@@ -119,4 +119,6 @@ class ContextMenu extends Plugin
 
 export const ContextMenuPlugin = ContextMenu;
 
+export * from './menu';
 export { VisualNEContextModule } from './module';
+export { ContextMenuService } from './context-menu.service';

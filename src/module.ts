@@ -22,17 +22,15 @@ import { ContextMenuService } from './context-menu.service';
     exports: [
         MainMenuComponent,
         NodeMenuComponent,
-        ItemComponent,
-    ],
-    entryComponents: [
-        MainMenuComponent,
-        NodeMenuComponent,
         CustomComponent,
         ItemComponent,
     ],
+    entryComponents: [
+      CustomComponent,
+    ],
 })
 export class VisualNEContextModule {
-    constructor(injector: Injector) { // StaticInjectorError due to 'npm link'
+    constructor(injector: Injector) {
         const CustomElement = createCustomElement(CustomComponent, { injector });
         if (!customElements.get('visualne-context-element')) customElements.define('visualne-context-element', CustomElement);
     }
