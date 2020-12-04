@@ -61,7 +61,6 @@ export abstract class MenuComponent implements OnInit
 
     public contextMenu(e: any)
     {
-        console.log(e);
         e.preventDefault();
     }
 

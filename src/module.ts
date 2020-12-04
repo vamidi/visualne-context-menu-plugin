@@ -26,6 +26,7 @@ import { ContextMenuService } from './context-menu.service';
         ItemComponent,
     ],
     entryComponents: [
+      MainMenuComponent,
       CustomComponent,
     ],
 })
