@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
     template: '',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomComponent implements OnInit
+export class ContextComponent implements OnInit
 {
     @Input() el: HTMLElement | null = null;
     @Input() component!: ComponentType<Component>;

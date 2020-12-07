@@ -2,15 +2,17 @@ import { NgModule, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { createCustomElement } from '@angular/elements';
 
-import { NodeMenuComponent, MainMenuComponent, ItemComponent } from './menu';
-import { CustomComponent } from './custom.component';
+import { ContextComponent } from './context.component';
+import { NodeMenuComponent } from './node-menu/node-menu.component';
+import { MainMenuComponent } from './main-menu/main-menu.component';
+import { ItemComponent } from './item/item.component';
 import { ContextMenuService } from './context-menu.service';
 
 @NgModule({
     declarations: [
         NodeMenuComponent,
         MainMenuComponent,
-        CustomComponent,
+        ContextComponent,
         ItemComponent,
     ],
     imports: [
@@ -22,18 +24,19 @@ import { ContextMenuService } from './context-menu.service';
     exports: [
         MainMenuComponent,
         NodeMenuComponent,
-        CustomComponent,
+        ContextComponent,
         ItemComponent,
     ],
     entryComponents: [
-      MainMenuComponent,
-      NodeMenuComponent,
-      CustomComponent,
+        MainMenuComponent,
+        NodeMenuComponent,
+        ContextComponent,
+        ItemComponent,
     ],
 })
 export class VisualNEContextModule {
     constructor(injector: Injector) {
-        const CustomElement = createCustomElement(CustomComponent, { injector });
+        const CustomElement = createCustomElement(ContextComponent, { injector });
         if (!customElements.get('visualne-context-element')) customElements.define('visualne-context-element', CustomElement);
     }
 }

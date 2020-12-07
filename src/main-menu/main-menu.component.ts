@@ -1,23 +1,23 @@
 import {
     ChangeDetectionStrategy,
     Component, ElementRef,
-    Input, OnDestroy, OnInit,
+    Input, OnInit,
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
-import { MenuComponent } from './menu.component';
+import { MenuComponent } from '../menu/menu.component';
 import { Component as VisualNEComponent, NodeEditor } from 'visualne';
 import { ContextMenuService } from '../context-menu.service';
 import { ComponentItem, createNode, traverse } from '../utils';
 
 @Component({
     selector: 'ng-main-menu',
-    templateUrl: './main-menu.component.html',
-    styleUrls: ['./main-menu.component.scss'],
+    templateUrl: '../menu/main-menu.component.html',
+    styleUrls: ['../menu/main-menu.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainMenuComponent extends MenuComponent implements OnInit, OnDestroy
+export class MainMenuComponent extends MenuComponent implements OnInit
 {
     @Input()
     public editor!: NodeEditor;
@@ -41,6 +41,9 @@ export class MainMenuComponent extends MenuComponent implements OnInit, OnDestro
 
     @Input()
     public nodeItems: {} = {};
+
+    @Input()
+    public args: Object = {};
 
     @Input()
     public allocate!: (component) => string[];
@@ -89,32 +92,7 @@ export class MainMenuComponent extends MenuComponent implements OnInit, OnDestro
         }
     }
 
-    public ngOnDestroy() { }
-
-    public addItem(title: string, onClick, path: string[] = []) {
-        let items = this._items;
-        for(const level of path) {
-            let exist = items.find(i => i.title === level);
-            if(!exist) {
-                exist = { title: level, subItems: [] };
-                items.push(exist)
-            }
-            items = exist.subItems || (exist.subItems = []);
-        }
-        items.push({ title, onClick });
-    }
-
-    public show(...args) {
-        // this.menu.$emit('show', ...args);
-    }
-
-    public hide(event: any) {
-        super.hide(event);
-        // TODO unsubscribe to the event
-        // this.editor.on('mousemove');
-    }
-
-    protected calculateMousePos(): { x, y }
+    protected calculateMousePos(): { x: number, y: number }
     {
         const clientX = this.x, clientY = this.y;
         const rect = this.editor.view.area.el.getBoundingClientRect();

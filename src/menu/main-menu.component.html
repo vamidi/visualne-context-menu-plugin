@@ -1,5 +1,5 @@
 <ul class="context context-menu is-visible" #menu (contextmenu)="contextMenu($event)" (mouseover)="cancelHide()" (mouseleave)="timeoutHide($event)">
      <!--  (contextmenu)="prevent.default()" (wheel)=""> -->
 <!--  <ng-search></ng-search>-->
-    <ng-component-menu-item *ngFor="let item of filtered" [item]="item" (onItemClick)="hide($event)"></ng-component-menu-item>
+    <ng-component-menu-item *ngFor="let item of filtered" [item]="item" [args]="args" (onItemClick)="hide($event)"></ng-component-menu-item>
 </ul>

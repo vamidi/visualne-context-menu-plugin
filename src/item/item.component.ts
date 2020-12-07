@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ComponentItem, DebouncedFunc } from '../../utils';
+import { ComponentItem, DebouncedFunc } from '../utils';
 import debounce from 'lodash.debounce';
 
 @Component({
@@ -18,7 +18,9 @@ export class ItemComponent implements OnInit
     @Output()
     public onItemClick: EventEmitter<Object> = new EventEmitter<Object>();
 
+    @Input()
     public args: Object = {};
+
     public visibleSubItems: boolean = false;
 
     public timeoutHide!: DebouncedFunc<(event: any) => void>;

@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
-import { MenuComponent } from './menu.component';
+import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { MenuComponent } from '../menu/menu.component';
 import { ContextMenuService } from '../context-menu.service';
 import { Component as VisualNEComponent, NodeEditor } from 'visualne';
 import { ComponentItem, createNode, traverse } from '../utils';
@@ -7,9 +7,10 @@ import { ComponentType } from '@angular/cdk/overlay';
 
 @Component({
     selector: 'ng-node-menu',
-    templateUrl: './main-menu.component.html',
+    templateUrl: '../menu/main-menu.component.html',
+    styleUrls: ['../menu/main-menu.component.scss'],
 })
-export class NodeMenuComponent extends MenuComponent
+export class NodeMenuComponent extends MenuComponent implements OnInit
 {
     @Input()
     public editor!: NodeEditor;
@@ -35,6 +36,9 @@ export class NodeMenuComponent extends MenuComponent
     public nodeItems: {} = {};
 
     @Input()
+    public args: Object = {};
+
+    @Input()
     public allocate!: (component) => string[];
 
     @Input()
@@ -53,12 +57,12 @@ export class NodeMenuComponent extends MenuComponent
     {
         super(contextMenuService, viewContainerRef);
         // super(editor, props, angularComponent);
-
-        this.initialize()
     }
 
-    protected initialize()
+    ngOnInit(): void
     {
+        super.ngOnInit();
+
         if (this.nodeItems['Delete'] !== false) {
             this.addItem('Delete', ({ node }) => this.editor.removeNode(node));
         }
@@ -74,8 +78,4 @@ export class NodeMenuComponent extends MenuComponent
 
         traverse(this.nodeItems, (name, func, path) => this.addItem(name, func, path));
     }
-
-    addItem(...args) { }
-
-    show(...args) { }
 }

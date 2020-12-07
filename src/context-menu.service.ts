@@ -24,7 +24,7 @@ export class ContextMenuService
 
     public open<T>(origin: FlexibleConnectedPositionStrategyOrigin, menuComponent: ComponentType<T>): ComponentRef<T>
     {
-        if(this.overlay)
+        if(this.overlayRef)
             this.close();
 
         this.overlayRef = this.overlay.create(

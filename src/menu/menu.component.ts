@@ -19,6 +19,7 @@ export abstract class MenuComponent implements OnInit
     // Custom items that we receive from the user.
     abstract items: { [key: string]: ComponentItem } = { };
     abstract nodeItems: {} = {};
+    abstract args: Object;
     abstract allocate: (component) => string[];
     abstract rename: (component) => string;
 
@@ -50,9 +51,19 @@ export abstract class MenuComponent implements OnInit
         this.timeoutHide = debounce(this.hide, this.delay);
     }
 
-    abstract addItem(...args);
-
-    abstract show(...args)
+    protected addItem(title: string, onClick, path: string[] = [])
+    {
+        let items = this._items;
+        for(const level of path) {
+            let exist = items.find(i => i.title === level);
+            if(!exist) {
+                exist = { title: level, subItems: [] };
+                items.push(exist)
+            }
+            items = exist.subItems || (exist.subItems = []);
+        }
+        items.push({ title, onClick });
+    }
 
     public hide(event: any)
     {

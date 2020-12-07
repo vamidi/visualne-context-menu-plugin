@@ -1,9 +1,10 @@
-import { /* NodeMenuComponent, */ MainMenuComponent } from './menu';
+import { MainMenuComponent } from './main-menu/main-menu.component';
+import { NodeMenuComponent } from './node-menu/node-menu.component';
 import { NodeEditor, Plugin } from 'visualne';
 import { PluginParams } from 'visualne/types/core/plugin';
 import { EventsTypes } from 'visualne/types/events';
 import { Context } from 'visualne/types/core/context';
-// import isFunction from 'lodash.isfunction';
+import isFunction from 'lodash.isfunction';
 
 export interface ContextMenuEvents extends EventsTypes
 {
@@ -16,7 +17,7 @@ export declare type ContextMenuPluginParams = PluginParams & {
     searchKeep?: () => false,
     delay?: number,
     items?: {},
-    nodeItems?: {},
+    nodeItems?: any,
     allocate?: (component) => string[],
     rename?: (component) => string,
     angularComponent?: null
@@ -41,7 +42,8 @@ class ContextMenu extends Plugin
         this.initialize(editor, params);
     }
 
-    private initialize(editor: Context<ContextMenuEvents & EventsTypes>, { searchBar, searchKeep, delay, items, nodeItems, allocate, rename, angularComponent }: ContextMenuPluginParams)
+    private initialize(editor: Context<ContextMenuEvents & EventsTypes>,
+                       { searchBar, searchKeep, delay, items, nodeItems, allocate, rename, angularComponent }: ContextMenuPluginParams)
     {
         // lets add bindings for the editor
         editor.bind('hidecontextmenu');
@@ -68,57 +70,40 @@ class ContextMenu extends Plugin
 
             const element = document.createElement('visualne-context-element');
             const props = element as any;
-
-            /*if(node) {
+            props.props = Object.assign({}, {
+                editor,
+                searchKeep,
+                delay,
+                items,
+                nodeItems,
+                allocate,
+                rename,
+                angularComponent,
+                x: e.clientX,
+                y: e.clientY,
+            });
+            if(node) {
                 props.component = angularComponent || NodeMenuComponent;
-                props.props = Object.assign({}, {
-                    editor,
+                props.props = Object.assign({}, props.props, {
                     searchBar: false,
-                    delay,
-                    items,
-                    nodeItems,
-                    allocate,
-                    rename,
-                    angularComponent,
-                    x: e.clientX,
-                    y: e.clientY,
+                    nodeItems: isFunction(nodeItems) ? nodeItems(node) : nodeItems,
+                    args: { node },
                 });
             } else {
-             */
                 props.el = element;
                 props.component = angularComponent || MainMenuComponent;
-                props.props = Object.assign({}, {
-                    editor,
-                    searchKeep,
-                    searchBar,
-                    delay,
-                    items,
+                props.props = Object.assign({}, props.props, {
                     nodeItems,
-                    allocate,
-                    rename,
-                    angularComponent,
-                    x: e.clientX,
-                    y: e.clientY,
+                    searchBar,
                 });
-            // }
+            }
 
             (<NodeEditor>(editor)).view.container.appendChild(element);
-
-            /*
-            if(node) {
-                menu = new NodeMenu(this.context, { searchBar: false, delay }, angularComponent,  isFunction(nodeItems) ? nodeItems(node) : nodeItems);
-                menu.show(x, y, { node });
-            } else {
-                menu = new MainMenu(this.context, { searchBar, searchKeep, delay }, angularComponent, { items, allocate, rename });
-                menu.show(x, y);
-            }
-             */
         });
     }
 }
 
 export const ContextMenuPlugin = ContextMenu;
 
-export * from './menu';
 export { VisualNEContextModule } from './module';
 export { ContextMenuService } from './context-menu.service';
